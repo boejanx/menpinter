@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport" />
     <meta content="{{ csrf_token() }}" name="csrf-token">
-    <title>BANGKOMPAS</title>
+    <title>MENPINTER</title>
     <link href="{{ asset('assets/vendor/css/core.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/vendor/css/pages/page-auth.css') }}" rel="stylesheet">
     <link href='https://cdn.boxicons.com/fonts/brands/boxicons-brands.min.css' rel='stylesheet'>
@@ -17,7 +17,7 @@
 
 <body>
     <div class="authentication-wrapper authentication-cover">
-        <a class="app-brand auth-cover-brand gap-2" href="index.html">
+        <a class="app-brand auth-cover-brand gap-2" href="{{ route('login') }}">
             <span class="app-brand-logo demo">
                 <span class="text-primary">
 
@@ -38,7 +38,7 @@
             <div class="d-flex col-12 col-lg-3 col-xl-3 align-items-center authentication-bg p-sm-5 p-4">
                 <div class="w-px-400 mx-auto">
                     <h5 class="mb-1">
-                        ASN PEMKAB PEKALONGANhc`
+                        ASN PEMKAB PEKALONGAN
                     </h5>
                     <p class="mb-1">Gunakan akun polakesatu untuk masuk.</p>
                     <!-- Logo -->
