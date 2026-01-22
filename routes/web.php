@@ -53,13 +53,17 @@ Route::middleware('auth')->group(function () {
 
     //kms
     Route::get('/kms', [KmsController::class, 'index'])->name('kms');
+    Route::get('/kms/{id}', [KmsController::class, 'detail'])->name('kms.detail');
+    Route::post('/kms', [KmsController::class, 'store'])->middleware('role:admin')->name('kms.store');
+    Route::put('/kms/{id}', [KmsController::class, 'update'])->middleware('role:admin')->name('kms.update');
+    Route::delete('/kms/{id}', [KmsController::class, 'destroy'])->middleware('role:admin')->name('kms.destroy');
 
     //api
     Route::get('/api/diklat', [ApiController::class, 'getDiklat']);
     Route::get('/api/struktural', [ApiController::class, 'getStruktural']);
 });
 
-Route::group(['middleware' => ['role:admin|verifikator']], function () {
+Route::group(['middleware' => ['auth', 'role:admin|verifikator']], function () {
     Route::get('/verifikasi', [VerifikasiController::class, 'index'])->name('verifikasi');
     Route::get('/verifikasi/detail/{id}', [VerifikasiController::class, 'getDetail'])->name('verifikasi.detail');
     Route::post('/verifikasi/{id}/update', [VerifikasiController::class, 'updateVerifikasi'])->name('verifikasi.update');
@@ -79,6 +83,14 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/manja/{id}/edit', [AdminBangkomController::class, 'edit'])->name('manja.edit');
     Route::put('/manja/{id}', [AdminBangkomController::class, 'update'])->name('manja.update');
     Route::delete('/manja/{id}', [AdminBangkomController::class, 'destroy'])->name('manja.destroy');
+
+    # User Management
+    Route::get('/users', [UserController::class, 'getData']);
+    Route::get('/users/{user}', [UserController::class, 'show']);
+    Route::put('/users/{user}', [UserController::class, 'update']);
+    Route::delete('/users/{user}', [UserController::class, 'destroy']);
+    Route::post('/users/{user}/assign-role', [UserController::class, 'assignRole']);
+    Route::post('/users/{user}/activate', [UserController::class, 'activate']);
 });
 
 Route::middleware('guest')->group(function () {

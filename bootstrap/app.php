@@ -25,6 +25,6 @@ return Application::configure(basePath: dirname(__DIR__))
         // $middleware->api(prepend: [ ... ]);
         // $middleware->group('nama_grup', [ ... ]);
     })
-    ->withExceptions(function (Exceptions $exceptions) {
-        //
-    })->create();
+    ->withExceptions(function (Exceptions $exceptions) {})
+    ->withEvents()
+    ->create();

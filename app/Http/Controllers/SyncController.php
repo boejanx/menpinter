@@ -20,7 +20,9 @@ class SyncController extends Controller
         $config = SiasnService::config();
         $siasnClient = new SiasnClient($config);
         try {
-            $response = $siasnClient->riwayat()->kursus('199207142020121009');
+            // Gunakan NIP user yang sedang login
+            $nip = Auth::user()->nip ?? Auth::user()->email; 
+            $response = $siasnClient->riwayat()->kursus($nip);
 
             return response()->json([
                 'status' => 'success',

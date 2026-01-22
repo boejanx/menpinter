@@ -6,7 +6,7 @@
                     <div class="px-4 py-4 mb-0 w-50 d-flex flex-column justify-content-between text-center text-sm-start">
                         <div class="card-title">
                             <h5 class="text-primary mb-0">Riwayat Pengembangan Kompetensi</h5>
-                            <p class="text-body w-sm-80 app-academy-xl-100">
+                            <p class="text-body w-sm-80 app-academy-xl-100 d-none d-lg-block">
                                 Berikut merupakan kegiatan yang pernah anda ikutkan dalam pengembangan kompetensi.
                             </p>
                             <div class="d-flex align-items-start column-gap-6 flex-sm-row flex-column row-gap-2">

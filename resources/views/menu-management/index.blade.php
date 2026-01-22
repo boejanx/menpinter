@@ -1,39 +1,56 @@
 <x-app-layout>
-    <h2 class="text-lg font-semibold mb-4">Manajemen Akses Menu</h2>
+    <div class="card">
+        <div class="card-header d-flex align-items-center justify-content-between">
+            <h5 class="mb-0">Manajemen Akses Menu</h5>
+        </div>
 
-    <form action="{{ route('menu-management.store') }}" method="POST">
-        @csrf
+        <div class="card-body">
+            <form action="{{ route('menu-management.store') }}" method="POST">
+                @csrf
 
-        <table class="table-auto w-full border border-gray-300">
-            <thead>
-                <tr class="bg-gray-100">
-                    <th class="px-4 py-2 border">Menu</th>
-                    @foreach($roles as $role)
-                        <th class="px-4 py-2 border text-center">{{ strtolower($role->name) }}</th>
-                    @endforeach
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($menus as $menu)
-                    <tr>
-                        <td class="border px-4 py-2">{{ $menu->name }}</td>
-                        @foreach($roles as $role)
-                            <td class="border px-4 py-2 text-center">
-                                <input
-                                    type="checkbox"
-                                    name="access[{{ $menu->id }}][{{ $role->id }}]"
-                                    {{ isset($roleMenuAccess[$menu->id][$role->id]) ? 'checked' : '' }}
-                                >
-                            </td>
-                        @endforeach
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width: 25%">Menu</th>
+                                @foreach($roles as $role)
+                                    <th class="text-center">
+                                        {{ ucfirst(strtolower($role->name)) }}
+                                    </th>
+                                @endforeach
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($menus as $menu)
+                                <tr>
+                                    <td class="fw-semibold">
+                                        {{ $menu->name }}
+                                    </td>
+                                    @foreach($roles as $role)
+                                        <td class="text-center">
+                                            <div class="form-check d-flex justify-content-center">
+                                                <input
+                                                    class="form-check-input"
+                                                    type="checkbox"
+                                                    name="access[{{ $menu->id }}][{{ $role->id }}]"
+                                                    id="menu_{{ $menu->id }}_role_{{ $role->id }}"
+                                                    {{ isset($roleMenuAccess[$menu->id][$role->id]) ? 'checked' : '' }}
+                                                >
+                                            </div>
+                                        </td>
+                                    @endforeach
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
 
-        <button
-            type="submit"
-            class="mt-4 px-4 py-2 bg-black text-white rounded hover:bg-gray-800 disabled:opacity-50"
-        >Simpan Akses</button>
-    </form>
+                <div class="mt-3 text-end">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bx bx-save me-1"></i> Simpan Akses
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 </x-app-layout>

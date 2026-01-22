@@ -6,7 +6,7 @@
                     <div class="px-4 py-4 mb-0 w-50 d-flex flex-column justify-content-between text-center text-sm-start">
                         <div class="card-title">
                             <h5 class="text-primary mb-0">Coaching & Mentoring</h5>
-                            <p class="text-body w-sm-80 app-academy-xl-100">
+                            <p class="text-body w-sm-80 app-academy-xl-100 d-none d-lg-block">
                                 Selamat datang di aplikasi pengembangan kompetensi ASN Pemerintah Kabupaten Pekalongan
                             </p>
                             <a class="btn btn-primary mb-1" href="javascript:;" id="btnTambah">Tambah Coaching/Mentoring</a>

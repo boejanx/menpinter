@@ -105,6 +105,11 @@ class SiasnService
         });
     }
 
+    public static function jfu()
+    {
+        return self::client()->referensi()->agama();
+    }
+
     public static function getASN(string $nip)
     {
         return Cache::remember("asn_{$nip}", 3600, function() use ($nip) {

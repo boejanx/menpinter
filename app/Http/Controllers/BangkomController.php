@@ -20,6 +20,7 @@ use Endroid\QrCode\Writer\PngWriter;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Services\BangkomService;
 use App\Services\ToSiasnService;
+use App\Services\LogService;
 
 class BangkomController extends Controller
 {
@@ -32,19 +33,10 @@ class BangkomController extends Controller
 
     public function index(Request $request)
     {
-        $page = $request->get('page', 1);
         $perPage = 5;
 
-        // Cache semua data (tanpa pagination)
-        $allEvents = Bangkom::orderBy('created_at', 'desc')->get();
-
-        $events = new LengthAwarePaginator(
-            $allEvents->forPage($page, $perPage),
-            $allEvents->count(),
-            $perPage,
-            $page,
-            ['path' => $request->url(), 'query' => $request->query()]
-        );
+        // Gunakan paginate() agar query SQL lebih ringan (LIMIT/OFFSET di database)
+        $events = Bangkom::orderBy('created_at', 'desc')->paginate($perPage);
 
         if ($request->ajax()) {
             return view('pages.bangkom.index', compact('events'))->render();
@@ -152,8 +144,6 @@ class BangkomController extends Controller
             return redirect()->back()->with('error', 'Gagal mengunduh sertifikat.');
         }
     }
-
-
 
     public function validasi($id)
     {

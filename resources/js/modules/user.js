@@ -1,77 +1,99 @@
-$(document).ready(function () {
-  const table = $('#table-user').DataTable({
-    ajax: '/api/users',
+export default function initUserModule() {
+  const TABLE = '#table-user';
+  if (!$(TABLE).length) return;
+
+  // Destroy if exists
+  if ($.fn.DataTable.isDataTable(TABLE)) {
+    $(TABLE).DataTable().clear().destroy();
+  }
+
+  window.allRoles = Array.isArray(window.allRoles) ? window.allRoles : [];
+
+  const csrf = $('meta[name="csrf-token"]').attr('content');
+  if (csrf) $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': csrf } });
+
+  const table = $(TABLE).DataTable({
+    destroy: true,
+    autoWidth: false,
+    ajax: { url: '/users', dataSrc: 'data' },
     columns: [
       { data: 'email' },
       { data: 'name' },
       {
         data: 'roles',
-        render: roles => roles.map(r => `<span class="badge bg-primary">${r.name}</span>`).join(' ')
+        render: r => (r || []).map(x => `<span class="badge bg-primary">${x.name}</span>`).join(' ')
+      },
+      {
+        data: 'is_active',
+        render: v => v
+          ? '<span class="badge bg-success">Aktif</span>'
+          : '<span class="badge bg-secondary">Tidak Aktif</span>'
       },
       {
         data: null,
-        render: function (data) {
-          return `
-            <button class="btn btn-sm btn-info edit-user" data-id="${data.id}">Edit</button>
-            <select class="form-select d-inline w-auto assign-role" data-id="${data.id}">
-              ${window.allRoles.map(role =>
-                `<option value="${role.name}" ${data.roles.some(r => r.name === role.name) ? 'selected' : ''}>${role.name}</option>`
-              ).join('')}
-            </select>
-            <button class="btn btn-sm btn-danger delete-user" data-id="${data.id}">Nonaktifkan</button>
-          `
-        }
+        orderable: false,
+        searchable: false,
+        render: d => `
+          <select class="form-select d-inline w-auto assign-role" data-id="${d.id}">
+            ${window.allRoles.map(r =>
+              `<option ${d.roles?.some(x => x.name === r.name) ? 'selected' : ''}>
+                ${r.name}
+              </option>`
+            ).join('')}
+          </select>
+          <button class="btn btn-sm ${d.is_active ? 'btn-danger' : 'btn-success'} toggle-active"
+                  data-id="${d.id}">
+            ${d.is_active ? 'Nonaktifkan' : 'Aktifkan'}
+          </button>
+        `
       }
     ]
-  })
-
-  // Load all roles from hidden meta or inline JS (optional)
-  window.allRoles = window.allRoles || []
-
-  // Handle edit
-  $('#table-user').on('click', '.edit-user', function () {
-    const id = $(this).data('id')
-    $.get(`/api/users/${id}`, res => {
-      $('#form-user [name="id"]').val(res.id)
-      $('#form-user [name="email"]').val(res.email)
-      $('#form-user [name="name"]').val(res.name)
-      $('#modalUserForm').modal('show')
-    })
-  })
+  });
 
   // Submit form
-  $('#form-user').submit(function (e) {
-    e.preventDefault()
-    const id = $('[name="id"]').val()
-    const data = $(this).serialize()
-    $.ajax({
-      url: `/api/users/${id}`,
-      method: 'PUT',
-      data,
-      success: () => {
-        $('#modalUserForm').modal('hide')
-        table.ajax.reload()
-      }
-    })
-  })
+  $(document).off('submit.user')
+    .on('submit.user', '#form-user', e => {
+      e.preventDefault();
+      const id = $('[name=id]').val();
+      $.ajax({
+        url: `/users/${id}`,
+        method: 'PUT',
+        data: $('#form-user').serialize(),
+        success: () => {
+          $('#modalUserForm').modal('hide');
+          table.ajax.reload(null, false);
+        }
+      });
+    });
 
-  // Role change
-  $('#table-user').on('change', '.assign-role', function () {
-    const id = $(this).data('id')
-    const role = $(this).val()
-    $.post(`/api/users/${id}/assign-role`, { role }, () => {
-      table.ajax.reload(null, false)
-    })
-  })
+  // Assign role
+  $(document).off('change.user')
+    .on('change.user', `${TABLE} .assign-role`, function () {
+      $.post(`/users/${$(this).data('id')}/assign-role`, {
+        role: $(this).val()
+      }).done(() => table.ajax.reload(null, false));
+    });
 
-  // Delete
-  $('#table-user').on('click', '.delete-user', function () {
-    if (!confirm('Nonaktifkan user ini?')) return
-    const id = $(this).data('id')
-    $.ajax({
-      url: `/api/users/${id}`,
-      method: 'DELETE',
-      success: () => table.ajax.reload()
-    })
-  })
-})
+  // Toggle active
+  $(document).off('click.user')
+    .on('click.user', `${TABLE} .toggle-active`, function () {
+      const row = table.row($(this).closest('tr')).data();
+      const id = row.id;
+      const activate = !row.is_active;
+
+      Swal.fire({
+        icon: 'warning',
+        title: activate ? 'Aktifkan User?' : 'Nonaktifkan User?',
+        showCancelButton: true,
+        confirmButtonText: activate ? 'Ya, aktifkan' : 'Ya, nonaktifkan'
+      }).then(r => {
+        if (!r.isConfirmed) return;
+
+        const req = activate
+          ? $.post(`/users/${id}/activate`)
+          : $.ajax({ url: `/users/${id}`, method: 'DELETE' });
+
+        req.done(() => table.ajax.reload(null, false));
+      });
+    });
+}

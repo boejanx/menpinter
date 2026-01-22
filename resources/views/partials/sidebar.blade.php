@@ -1,8 +1,8 @@
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
-  <div class="app-brand my-4">
-    <a href="/" class="app-brand-link">
+  <div class="mb-4">
+    <a href="/" class="">
       <span class="app-brand-logo">
-        <img src="{{ asset('assets/img/logo/logo.png') }}" alt="logo" width="100%">
+        <img src="{{ asset('assets/img/logo/logo.webp') }}" alt="logo" width="100%">
       </span>
       <span class="app-brand-text menu-text fw-bolder ms-2"></span>
     </a>

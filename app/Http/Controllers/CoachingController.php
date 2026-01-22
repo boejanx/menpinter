@@ -24,67 +24,6 @@ class CoachingController extends Controller
         return view('pages.coaching.index');
     }
 
-    // public function store(Request $request, $id = null)
-    // {
-    //     $isUpdate = $id !== null;
-
-    //     $rules = [
-    //         'jenis_diklat' => 'required|numeric',
-    //         'nama_diklat' => 'required|string|max:255',
-    //         'institusi_penyelenggara' => 'required|string|max:255',
-    //         'tanggal_mulai' => 'required|date',
-    //         'tanggal_selesai' => 'required|date|after_or_equal:tanggal_mulai',
-    //         'dokumen_pelaksanaan' => 'nullable|file|mimes:pdf|max:900',
-    //         'dokumen_evaluasi' => 'nullable|file|mimes:pdf|max:900',
-    //     ];
-
-    //     $request->validate($rules);
-
-    //     DB::transaction(function () use ($request, $isUpdate, $id) {
-    //         $data = $isUpdate ? BangkomData::findOrFail($id) : new BangkomData();
-
-    //         if (!$isUpdate) {
-    //             $data->id_usulan = Str::uuid();
-    //             $data->id_pns = Auth::user()->id_pns ?? 'default';
-    //             $data->jenis = 2;
-    //         }
-
-    //         $data->id_diklat        = $request->jenis_diklat;
-    //         $data->namakegiatan     = $request->nama_diklat;
-    //         $data->institusi        = $request->institusi_penyelenggara;
-    //         $data->tanggal_mulai    = $request->tanggal_mulai;
-    //         $data->tanggal_selesai  = $request->tanggal_selesai;
-    //         $data->tahun            = date('Y', strtotime($request->tanggal_mulai));
-    //         $data->nip              = Auth::user()->nip ?? Auth::user()->email ?? '-';
-    //         $data->save();
-
-    //         $doc = CoachingDoc::firstOrNew(['id_usulan' => $data->id_usulan]);
-    //         if (!$doc->exists) {
-    //             $doc->id_dokumen = Str::uuid();
-    //         }
-
-    //         $handleFileUpload = function ($fileKey, $docAttribute) use ($request, $doc) {
-    //             if ($request->hasFile($fileKey) && $request->file($fileKey)->isValid()) {
-    //                 $oldPath = $doc->{$docAttribute}; 
-
-    //                 $newPath = $request->file($fileKey)->store('bukti_dukung', 'public');
-    //                 $doc->{$docAttribute} = $newPath;
-
-    //                 if (!empty($oldPath) && Storage::disk('public')->exists($oldPath)) {
-    //                     Storage::disk('public')->delete($oldPath);
-    //                 }
-    //             }
-    //         };
-
-    //         $handleFileUpload('dokumen_pelaksanaan', 'doc_pelaksanaan');
-    //         $handleFileUpload('dokumen_evaluasi', 'doc_evaluasi');
-
-    //         $doc->save();
-    //     });
-
-    //     return response()->json(['message' => 'Data berhasil disimpan.']);
-    // }
-
     public function store(CoachingRequest $request, $id = null)
     {
         $user = Auth::user();

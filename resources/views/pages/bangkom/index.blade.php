@@ -6,7 +6,7 @@
                     <div class="px-4 py-4 mb-0 w-50 d-flex flex-column justify-content-between text-center text-sm-start">
                         <div class="card-title">
                             <h5 class="text-primary mb-0">Kursus / Pelatihan / Webinar</h5>
-                            <p class="text-body w-sm-80 app-academy-xl-100">
+                            <p class="d-none text-body w-sm-80 app-academy-xl-100 d-lg-block">
                                 Webinar adalah kegiatan pelatihan online yang dapat diikuti oleh pegawai untuk meningkatkan kompetensi dan pengetahuan. Pastikan Anda mengikuti webinar yang sesuai
                                 dengan bidang Anda.
                             </p>

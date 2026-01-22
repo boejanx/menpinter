@@ -3,16 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
-use Illuminate\View\View;
-use App\Models\User;
 use App\Services\AuthService;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -29,31 +24,12 @@ class AuthenticatedSessionController extends Controller
         ]);
 
         try {
-            $result = app(AuthService::class)->authenticate($request);
-
+            app(AuthService::class)->authenticate($request);
             $request->session()->regenerate();
 
-            if ($request->ajax() || $request->wantsJson()) {
-                return response()->json([
-                    'success' => true,
-                    'redirect_to' => route('dashboard'),
-                ]);
-            }
-
-            return redirect()->intended(route('dashboard'));
+            return $this->successResponse($request);
         } catch (\Throwable $e) {
-
-            if ($request->ajax() || $request->wantsJson()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => $e->getMessage(),
-                    'errors' => ['nip' => [$e->getMessage()]],
-                ], 422);
-            }
-
-            return back()
-                ->withErrors(['nip' => $e->getMessage()])
-                ->withInput();
+            return $this->errorResponse($request, $e->getMessage());
         }
     }
 
@@ -69,14 +45,11 @@ class AuthenticatedSessionController extends Controller
         return redirect()->intended(route('dashboard'));
     }
 
-    /**
-     * Helper untuk respon error (agar tidak duplikat)
-     */
     private function errorResponse(Request $request, string $message)
     {
         if ($request->ajax() || $request->wantsJson()) {
             return response()->json([
-                'success' => 'gagal',
+                'success' => false,
                 'message' => $message,
                 'errors' => ['nip' => [$message]],
             ], 422);

@@ -13,7 +13,7 @@
                         </div>
                     </div>
                     <div class="w-50 d-flex justify-content-center justify-content-sm-end h-px-200 mb-sm-0">
-                        <img alt="boy illustration" class="img-fluid scaleX-n1-rtl" src="/assets/img/illustrations/dashboard.png">
+                        <img alt="boy illustration" class="img-fluid scaleX-n1-rtl" src="/assets/img/illustrations/dashboard.webp">
                     </div>
                 </div>
             </div>
@@ -120,7 +120,13 @@
         </div>
         <div class="col-md-8 col-lg-8 col-xs-12 col-sm-12 order-5">
             <div class="card card-border-shadow-primary">
-                <h5 class="card-header">Pelatihan Yang Anda Ikuti</h5>
+                <table class="table align-middle">
+                            <thead class="table-primary">
+                                <tr>
+                                    <th>Pelatihan Yang Anda Ikuti</th>
+                                </tr>
+                            </thead>
+                </table>
                 <div class="table-responsive text-nowrap">
 
                     @if ($pelatihan->count())
@@ -164,7 +170,7 @@
                             </tbody>
                         </table>
                     @else
-                        <div class="alert alert-warning text-dark text-center">
+                        <div class="alert alert-warning text-dark text-center m-4">
                             <i class="bx bx-info-circle me-1"></i>
                             <h5>Belum ada pelatihan yang anda ikuti</h5>
                         </div>

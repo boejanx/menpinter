@@ -57,7 +57,7 @@
             </li>
             <li class="nav-item navbar-dropdown dropdown-user dropdown">
                 <a class="nav-link dropdown-toggle hide-arrow p-0" data-bs-toggle="dropdown" href="javascript:void(0);">
-                    <span class="d-none d-xl-inline-block text-body fw-normal">
+                    <span class="d-xl-inline-block text-body fw-normal">
                         {{ auth()->user()?->name ?? '-' }}
                     </span><br>
                     <span class="small">

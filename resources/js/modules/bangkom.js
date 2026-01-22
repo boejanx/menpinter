@@ -197,6 +197,7 @@ const isiKehadiran = async (e) => {
  * Initializes event listeners for the Bangkom page.
  */
 export default function initBangkomPage() {
+    initSelect2();
     document.body.addEventListener("click", (e) => {
         const button = e.target.closest("#load-more");
         if (button) {

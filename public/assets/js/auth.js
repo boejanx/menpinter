@@ -9,43 +9,51 @@ $('#formAuthentication').on('submit', function (e) {
 
     const form = $(this);
     const url = form.attr('action');
-    const data = form.serialize(); // Serialize data dari form
+    const data = form.serialize();
     const submitBtn = form.find('button[type="submit"]');
 
-    // Ambil nilai token CSRF dari meta tag
-    const csrfToken = $('meta[name="csrf-token"]').attr('content');
-
-    // Gabungkan token CSRF ke data form    // Ambil nilai input
     const nip = $('#nip').val().trim();
     const password = $('#password').val().trim();
+    const turnstileToken = $('#turnstile-token').val();
 
-    // Reset error sebelumnya
     $('.invalid-feedback').remove();
     $('.is-invalid').removeClass('is-invalid');
 
-    // Validasi manual
-    if (nip === '' || password === '') {
-        if (nip === '') {
-            $('#nip').addClass('is-invalid').after('<div class="invalid-feedback">NIP wajib diisi.</div>');
+    if (!nip || !password) {
+        if (!nip) {
+            $('#nip')
+                .addClass('is-invalid')
+                .after('<div class="invalid-feedback">NIP wajib diisi.</div>');
         }
-        if (password === '') {
-            $('#password').addClass('is-invalid').after('<div class="invalid-feedback">Password wajib diisi.</div>');
+        if (!password) {
+            $('#password')
+                .addClass('is-invalid')
+                .after('<div class="invalid-feedback">Password wajib diisi.</div>');
         }
-
-        return; // Hentikan proses
+        return;
     }
 
-    // Tampilkan spinner & disable tombol
+    if (!turnstileToken) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Verifikasi Gagal',
+            text: 'Silakan tunggu verifikasi keamanan selesai.'
+        });
+        return;
+    }
+
     $('#login-spinner').show();
-    submitBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Memproses...');
+    submitBtn.prop('disabled', true)
+        .html('<i class="fas fa-spinner fa-spin"></i> Memproses...');
 
     $.ajax({
         url: url,
         method: 'POST',
-        data: dataWithCsrf, // Kirim data dengan token CSRF
+        data: data,
         dataType: 'json',
-        timeout: 8000, // Batas waktu 8 detik
-        success: function (response) {
+        timeout: 8000,
+
+        success(response) {
             if (response.success) {
                 window.location.href = response.redirect_to;
             } else {
@@ -53,16 +61,16 @@ $('#formAuthentication').on('submit', function (e) {
                     icon: 'error',
                     title: 'Login Gagal',
                     text: response.message || 'NIP atau password salah.',
-                    confirmButtonText: 'OK'
                 });
             }
         },
-        error: function (xhr, status) {
+
+        error(xhr, status) {
             if (status === 'timeout') {
                 Swal.fire({
                     icon: 'warning',
                     title: 'Waktu Habis',
-                    text: 'Koneksi ke server terlalu lama. Silakan coba lagi.',
+                    text: 'Koneksi ke server terlalu lama.'
                 });
                 return;
             }
@@ -71,19 +79,18 @@ $('#formAuthentication').on('submit', function (e) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Login Gagal',
-                    text: 'NIP atau password salah. Gunakan NIP dan password yang digunakan untuk login ke Polakesatu.',
+                    text: 'NIP atau password salah.'
                 });
             } else {
                 Swal.fire({
                     icon: 'error',
                     title: 'Kesalahan Server',
-                    text: 'Terjadi kesalahan pada sistem. Silakan coba lagi.',
+                    text: 'Terjadi kesalahan pada sistem.'
                 });
             }
         },
 
-        complete: function () {
-            // Sembunyikan spinner & enable tombol
+        complete() {
             $('#login-spinner').hide();
             submitBtn.prop('disabled', false).text('Login');
         }
@@ -93,22 +100,3 @@ $('#formAuthentication').on('submit', function (e) {
 function setTurnstileToken(token) {
     $('#turnstile-token').val(token);
 }
-
-const turnstileToken = $('#turnstile-token').val();
-
-if (!turnstileToken) {
-    Swal.fire({
-        icon: 'error',
-        title: 'Verifikasi Gagal',
-        text: 'Silakan tunggu verifikasi keamanan selesai.',
-    });
-    return;
-}
-
-$(document).ajaxError(function (event, jqxhr) {
-    if (jqxhr.status === 422) {
-        // Jangan log apa pun untuk error validasi
-        event.preventDefault();
-        return false;
-    }
-});

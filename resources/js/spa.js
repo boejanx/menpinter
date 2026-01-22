@@ -46,18 +46,14 @@ function setActiveMenu(url) {
 }
 
 function reinitPageScripts() {
-  const pageName = app.dataset.page;
-  if (!pageName) return;
-
-  // Panggil script sesuai page
   import("./app.js").then(({ loadPageScript }) => {
     if (typeof loadPageScript === "function") {
-      requestIdleCallback(() => loadPageScript());
+      loadPageScript(); 
     }
   });
 
   import("./lazyload.js").then(({ initLazyImages }) => {
-    requestIdleCallback(() => initLazyImages());
+    initLazyImages();
   });
 }
 
@@ -148,6 +144,9 @@ function updatePageFromHTML(html, url) {
   app.setAttribute("data-page", pageName);
   app.innerHTML = newApp.innerHTML;
 
+  // 🔥 INI POSISI PALING BENAR
+  document.dispatchEvent(new Event('spa:loaded'));
+
   const newFooter = doc.querySelector(".footer");
   if (newFooter) {
     const currentFooter = document.querySelector(".footer");
@@ -158,9 +157,8 @@ function updatePageFromHTML(html, url) {
   window.history.pushState({}, "", url);
 
   setActiveMenu(url);
-  reinitPageScripts();
-  hideLoader();
 }
+
 
 document.addEventListener("DOMContentLoaded", () => {
   setActiveMenu(window.location.href);

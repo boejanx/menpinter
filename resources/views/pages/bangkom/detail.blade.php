@@ -3,7 +3,7 @@
         <div class="col-lg-12">
             <h5 class="card-title mb-0"><i class="bx bx-home"></i> Detail Pelatihan</h5>
         </div>
-        <div class="col-lg-8">
+        <div class="col-lg-8 order-2">
             <x-card>
 
                 <div class="d-flex justify-content-between align-items-center flex-wrap mb-6 gap-2">
@@ -42,7 +42,7 @@
                 </x-card>
             </x-card>
         </div>
-        <div class="col-lg-4">
+        <div class="col-lg-4 order-1">
             <x-card bodyClass="pt-0 px-0" class="h-100">
                 <div class="px-5 py-4 bg-light">
                     <div class="text-center align-items-center">

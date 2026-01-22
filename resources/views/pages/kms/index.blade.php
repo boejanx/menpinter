@@ -11,10 +11,16 @@
                         <div class="d-flex align-items-center justify-content-between col-md-6 col-xs-12 col-sm-12 mx-auto">
                             <input class="form-control" id="search-kms" placeholder="Cari Judul ..." type="search">
                         </div>
-                        <div class="mt-4 text-center">
-                            <button class="btn btn-primary"> <i class="fas fa-plus"></i> &nbsp; Tambahkan Pengetahuan </button> &nbsp;
-                            <button class="btn btn-success"> <i class="fas fa-file"></i> &nbsp; Dokumenku </button>
-                        </div>
+                        <div class="mt-4 text-center d-flex justify-content-center gap-2">
+    <button class="btn btn-primary">
+        <i class="fas fa-plus"></i> Tambahkan Pengetahuan
+    </button>
+
+    <button class="btn btn-success">
+        <i class="fas fa-file"></i> Dokumenku
+    </button>
+</div>
+
                     </div>
                 </div>
             </div>
@@ -26,19 +32,19 @@
                 </div>
                 <div class="card-body">
                     <ul class="p-0 m-0">
-                        <li class="d-flex align-items-center mb-4 kms-category {{ empty($categoryId) ? 'active' : '' }}" onclick="window.location='{{ route('kms') }}'" style="cursor:pointer">
-
-                            <div class="avatar flex-shrink-0 me-3 h3">
+                        <li class="mb-4 kms-category {{ empty($categoryId) ? 'active' : '' }}">
+                            <a href="{{ route('kms') }}" class="d-flex align-items-center text-body w-100">
+                                <div class="avatar flex-shrink-0 me-3 h3">
                                     <i class="fas fa-code-merge"></i>
                                 </div>
-                            <h6 class="mb-0">Semua Kategori</h6>
+                                <h6 class="mb-0">Semua Kategori</h6>
+                            </a>
                         </li>
 
                         {{-- Loop through categories --}}
                         @foreach ($categories as $category)
-                            <li class="d-flex align-items-center kms-category {{ ($categoryId ?? null) == $category->cat_id ? 'active' : '' }}"
-                                onclick="window.location='?category={{ $category->cat_id }}'" style="cursor:pointer">
-
+                            <li class="kms-category {{ ($categoryId ?? null) == $category->cat_id ? 'active' : '' }}">
+                                <a href="?category={{ $category->cat_id }}" class="d-flex align-items-center text-body w-100">
                                 <div class="avatar flex-shrink-0 me-3 h4">
                                     <i class="fas fa-code-merge"></i>
                                 </div>
@@ -52,6 +58,7 @@
                                         <h6 class="fw-normal mb-0">{{ $category->jumlah }}</h6>
                                     </div>
                                 </div>
+                                </a>
                             </li>
                         @endforeach
 
